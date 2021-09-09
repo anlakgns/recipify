@@ -1,13 +1,13 @@
 import * as types from '../types';
 
-export default abstract class View<T extends HTMLElement> {
+export default abstract class View<T extends HTMLElement, U extends types.RenderInputDataTypes> {
   protected abstract parentEl: T;
-  protected abstract generateMarkup(data: types.RenderInputDataTypes): string;
+  protected abstract generateMarkup(data: U): string;
   protected abstract errorMessage: string;
   protected abstract message: string;
-  protected abstract data: types.RenderInputDataTypes | null;
+  protected abstract data: U | null;
 
-  public render(data: types.RenderInputDataTypes | null): void {
+  public render(data: U | null): void {
     
     // data guard
     if (!data || (Array.isArray(data) && data.length === 0))return this.renderError()

@@ -1,14 +1,14 @@
 import * as types from '../types';
 import View from './ViewParent';
 
-class ResultsView extends View<HTMLDivElement> {
+class ResultsView extends View<HTMLDivElement, types.MultiRecipeInput[]> {
   protected parentEl = document.querySelector('.results')! as HTMLDivElement;
-  protected data: types.MultiRecipe[] | null = null;
+  protected data: types.MultiRecipeInput[] | null = null;
   protected errorMessage =
     'No recipes found for your query! Please try again ;)';
   protected message = '';
 
-  protected generateMarkup(data: types.MultiRecipe[]): string {
+  protected generateMarkup(data: types.MultiRecipeInput[]): string {
     const markup = data.map((recipe) => {
       return `
         <li class="preview">

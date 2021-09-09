@@ -1,12 +1,14 @@
 import * as types from './types';
 import { getJSON } from './helper';
-import { API_URL } from './config';
+import { API_URL, RES_PER_PAGE } from './config';
 
 export const state: types.State = {
   recipe: null,
   search: {
     query: "",
-    results: []
+    results: [],
+    page : 1,
+    resultsPerPage: RES_PER_PAGE
   }
 };
 
@@ -66,3 +68,16 @@ export const fetchRecipeResults = async function (
     throw err;
   }
 };
+
+
+export const getSearchResultsPage = (page: number = state.search.page): types.MultiRecipeInput[] => {
+  state.search.page = page
+  const start = (page-1)* state.search.resultsPerPage
+  const end = page * state.search.resultsPerPage
+
+  return state.search.results.slice(start, end)
+}
+
+
+
+ 

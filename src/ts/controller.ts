@@ -3,6 +3,7 @@ import * as model from "./model"
 import recipeView from "./views/recipeView"
 import searchView from './views/searchView'
 import resultsView from './views/resultsView'
+import paginationView from './views/paginationView'
  
 
 const controlRecipes = async () => {
@@ -46,15 +47,34 @@ const controlSearchResults = async () => {
 
     // render results
     console.log(model.state.search.results)
-    resultsView.render(model.state.search.results)
+    resultsView.render(model.getSearchResultsPage(model.state.search.page))
+
+    // render pagination buttons
+    paginationView.render(model.state.search)
 
   } catch(err) {
     console.log(err)
   } 
 }
 
+const controlPagination = (gotoPage: number): void => {
+  // re-render with new page no
+  resultsView.render(model.getSearchResultsPage(model.state.search.page))
+  paginationView.render(model.state.search)
+
+
+}
+
+const controlServings = () => {
+  // update the serving state
+  model.updateServings(6)
+
+  // update view
+}
+
 const init = () => {
   recipeView.addRenderHandler(controlRecipes)
   searchView.addSearchHandler(controlSearchResults)
+  paginationView.addPaginationHandler(controlPagination)
 }
 init()

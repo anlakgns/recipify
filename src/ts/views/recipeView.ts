@@ -1,13 +1,13 @@
 import * as types from '../types';
 import View from './ViewParent';
 
-class RecipeView extends View<HTMLDivElement> {
-  protected data: types.Recipe | null = null;
+class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
+  protected data: types.RecipeInput | null = null;
   protected parentEl = document.querySelector('.recipe')! as HTMLDivElement;
   protected errorMessage = 'We could not find that recipe. Please try another one!';
   protected message = '';
 
-  protected generateMarkup(data: types.Recipe): string {
+  protected generateMarkup(data: types.RecipeInput): string {
     return `
       <figure class="recipe__fig">
         <img src="${data.image}" alt="${data.title}" class="recipe__img" />

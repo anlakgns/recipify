@@ -5,14 +5,16 @@ export type Ingredient = {
 };
 
 export type State = {
-  recipe: Recipe | null;
+  recipe: RecipeInput | null;
   search: {
     query: string;
-    results: MultiRecipe[]
+    results: MultiRecipeInput[];
+    page: number;
+    resultsPerPage: number;
   };
 };
 
-export interface Recipe {
+export interface RecipeInput {
   id: string;
   title: string;
   publisher: string;
@@ -23,11 +25,18 @@ export interface Recipe {
   ingredients: Ingredient[];
 }
 
-export interface MultiRecipe{
+export interface MultiRecipeInput {
   id: string;
   title: string;
   publisher: string;
   image: string;
+}
+
+export interface PaginationInput {
+  query: string;
+  results: MultiRecipeInput[];
+  page: number;
+  resultsPerPage: number;
 }
 
 export interface SingleRecipeResponseAPI {
@@ -39,10 +48,10 @@ export interface SingleRecipeResponseAPI {
 
 export interface MultiRecipeResponseAPI {
   status: string;
-  results: number
+  results: number;
   data: {
     recipes: MultiRecipeAPI[];
-  },
+  };
 }
 
 export interface SingleRecipeAPI {
@@ -63,7 +72,10 @@ export interface MultiRecipeAPI {
   image_url: string;
 }
 
-export type RenderInputDataTypes = Recipe | MultiRecipe[]
+export type RenderInputDataTypes =
+  | RecipeInput
+  | MultiRecipeInput[]
+  | PaginationInput;
 
 export type APIResponseTypes =
   | SingleRecipeResponseAPI
