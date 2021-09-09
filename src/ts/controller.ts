@@ -1,36 +1,60 @@
 import '../sass/main.scss';
+import * as model from "./model"
+import recipeView from "./views/recipeView"
+import searchView from './views/searchView'
+import resultsView from './views/resultsView'
+ 
 
-const showRecipe = async function () {
+const controlRecipes = async () => {
   try {
-    const res = await fetch(
-      'https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886'
-    );
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(`${data.message} (${res.status})`);
-    }
-
-    let { recipe } = data.data;
-    recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publicher: recipe.publisher,
-      sourceURL: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
-    console.log(recipe);
-  } catch (err) {
-    alert(err);
+    // getting hashcode from URL
+    const id = window.location.hash.slice(1)
+    
+    // guard clause for empty hash
+    if(!id) return;
+    
+    // fetching data
+    recipeView.renderSpinner()
+    await model.fetchRecipe(id)
+    
+    // render
+    console.log(model.state.recipe)
+    recipeView.render(model.state.recipe)
+        
+  } catch (err: any) {
+   
+    // error render
+    recipeView.renderError()
   }
 };
 
-showRecipe();
+const controlSearchResults = async () => {
+  try {
 
-// https://forkify-api.herokuapp.com/v2
+    // spinner
+    resultsView.renderSpinner()
 
-///////////////////////////////////////
+    // getting query
+    const query = searchView.getQuery();
+    
+    // guard clause
+    if(!query) return;
+
+    // fetch search results
+    await model.fetchRecipeResults(query)
+
+    // render results
+    console.log(model.state.search.results)
+    resultsView.render(model.state.search.results)
+
+  } catch(err) {
+    console.log(err)
+  } 
+}
+
+const init = () => {
+  recipeView.addRenderHandler(controlRecipes)
+  searchView.addSearchHandler(controlSearchResults)
+}
+init()
