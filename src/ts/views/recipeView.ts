@@ -36,12 +36,12 @@ class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
           <span class="recipe__info-text">servings</span>
 
           <div class="recipe__info-buttons">
-            <button class="btn--tiny btn--increase-servings">
+            <button class="btn--tiny btn--increase-servings" data-update-to="${data.servings - 1}">
               <svg>
                 <use href="src/img/icons.svg#icon-minus-circle"></use>
               </svg>
             </button>
-            <button class="btn--tiny btn--increase-servings">
+            <button class="btn--tiny btn--increase-servings" data-update-to="${data.servings + 1}">
               <svg>
                 <use href="src/img/icons.svg#icon-plus-circle"></use>
               </svg>
@@ -106,6 +106,20 @@ class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
   addRenderHandler(handler: () => void) {
     window.addEventListener('hashchange', handler);
     window.addEventListener('load', handler);
+  }
+
+  addUpdateServingsHandler(handler: (newServings: number)=> void) {
+    this.parentEl.addEventListener('click', (e)=> {
+      const target: HTMLElement  = e.target! as HTMLElement
+
+      const btn: HTMLButtonElement  = target.closest('.btn--tiny')! as HTMLButtonElement
+
+      if(!btn.dataset.updateTo) return;
+      const newServ = parseFloat(btn.dataset.updateTo)
+
+      if(newServ > 0) handler(newServ)
+    })
+
   }
 }
 

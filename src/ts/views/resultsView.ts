@@ -9,10 +9,13 @@ class ResultsView extends View<HTMLDivElement, types.MultiRecipeInput[]> {
   protected message = '';
 
   protected generateMarkup(data: types.MultiRecipeInput[]): string {
+
+    const id = window.location.hash.slice(1)
+
     const markup = data.map((recipe) => {
       return `
         <li class="preview">
-          <a class="preview__link" href="#${recipe.id}">
+          <a class="preview__link ${recipe.id === id ? "preview__link--active": ""}" href="#${recipe.id}">
             <figure class="preview__fig">
               <img src="${recipe.image}" alt="Test" />
             </figure>

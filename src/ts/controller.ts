@@ -14,6 +14,9 @@ const controlRecipes = async () => {
     
     // guard clause for empty hash
     if(!id) return;
+
+    // update results view to mark selected search result
+    resultsView.update(model.getSearchResultsPage())
     
     // fetching data
     recipeView.renderSpinner()
@@ -22,7 +25,7 @@ const controlRecipes = async () => {
     // render
     console.log(model.state.recipe)
     recipeView.render(model.state.recipe)
-        
+
   } catch (err: any) {
    
     // error render
@@ -65,16 +68,20 @@ const controlPagination = (gotoPage: number): void => {
 
 }
 
-const controlServings = () => {
+const controlServings = (newServings: number): void => {
   // update the serving state
-  model.updateServings(6)
+  model.updateServings(newServings)
 
   // update view
+  recipeView.update(model.state.recipe)
+
 }
 
 const init = () => {
   recipeView.addRenderHandler(controlRecipes)
+  recipeView.addUpdateServingsHandler(controlServings)
   searchView.addSearchHandler(controlSearchResults)
   paginationView.addPaginationHandler(controlPagination)
+
 }
 init()
