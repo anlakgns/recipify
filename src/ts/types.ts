@@ -12,6 +12,7 @@ export type State = {
     page: number;
     resultsPerPage: number;
   };
+  bookmarks: RecipeInput[] | null
 };
 
 export interface RecipeInput {
@@ -23,6 +24,8 @@ export interface RecipeInput {
   servings: number;
   cookingTime: number;
   ingredients: Ingredient[];
+  bookmarked: boolean;
+  key?: string
 }
 
 export interface MultiRecipeInput {
@@ -30,6 +33,7 @@ export interface MultiRecipeInput {
   title: string;
   publisher: string;
   image: string;
+  key?: string
 }
 
 export interface PaginationInput {
@@ -63,6 +67,8 @@ export interface SingleRecipeAPI {
   servings: number;
   cooking_time: number;
   id: string;
+  bookmarked?: boolean;
+  key?: string
 }
 
 export interface MultiRecipeAPI {
@@ -70,12 +76,14 @@ export interface MultiRecipeAPI {
   title: string;
   publisher: string;
   image_url: string;
+  key?: string
 }
 
 export type RenderInputDataTypes =
   | RecipeInput
   | MultiRecipeInput[]
-  | PaginationInput;
+  | PaginationInput
+  | RecipeInput[]
 
 export type APIResponseTypes =
   | SingleRecipeResponseAPI

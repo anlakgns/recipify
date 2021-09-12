@@ -51,11 +51,10 @@ class PaginationView extends View<HTMLDivElement, types.PaginationInput> {
      const target: HTMLElement = e.target! as HTMLElement
      const btn: HTMLButtonElement = target.closest('.btn--inline') as HTMLButtonElement
 
-     console.log(btn)
-    if(!btn.dataset.goto) return
+    if(!btn.dataset.goto) return;
     const gotoPage = parseFloat(btn.dataset.goto)
 
-     handler(gotoPage)
+    handler(gotoPage)
    })
   }
 }

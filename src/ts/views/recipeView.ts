@@ -4,7 +4,8 @@ import View from './ViewParent';
 class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
   protected data: types.RecipeInput | null = null;
   protected parentEl = document.querySelector('.recipe')! as HTMLDivElement;
-  protected errorMessage = 'We could not find that recipe. Please try another one!';
+  protected errorMessage =
+    'We could not find that recipe. Please try another one!';
   protected message = '';
 
   protected generateMarkup(data: types.RecipeInput): string {
@@ -36,12 +37,16 @@ class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
           <span class="recipe__info-text">servings</span>
 
           <div class="recipe__info-buttons">
-            <button class="btn--tiny btn--increase-servings" data-update-to="${data.servings - 1}">
+            <button class="btn--tiny btn--increase-servings" data-update-to="${
+              data.servings - 1
+            }">
               <svg>
                 <use href="src/img/icons.svg#icon-minus-circle"></use>
               </svg>
             </button>
-            <button class="btn--tiny btn--increase-servings" data-update-to="${data.servings + 1}">
+            <button class="btn--tiny btn--increase-servings" data-update-to="${
+              data.servings + 1
+            }">
               <svg>
                 <use href="src/img/icons.svg#icon-plus-circle"></use>
               </svg>
@@ -49,12 +54,17 @@ class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
           </div>
         </div>
 
-        <div class="recipe__user-generated">
-          
+        <div class="recipe__user-generated ${this.data?.key ? "" : "hidden"}">
+          <svg>
+            <use href="src/img/icons.svg#icon-user"></use>
+          </svg>
         </div>
-        <button class="btn--round">
+
+        <button class="btn--round btn--bookmark">
           <svg class="">
-            <use href="src/img/icons.svg#icon-bookmark-fill"></use>
+            <use href="src/img/icons.svg#icon-bookmark${
+              data.bookmarked ? '-fill' : ''
+            }"></use>
           </svg>
         </button>
       </div>
@@ -103,23 +113,39 @@ class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
         </a>
       </div>`;
   }
+
   addRenderHandler(handler: () => void) {
     window.addEventListener('hashchange', handler);
     window.addEventListener('load', handler);
   }
 
-  addUpdateServingsHandler(handler: (newServings: number)=> void) {
-    this.parentEl.addEventListener('click', (e)=> {
-      const target: HTMLElement  = e.target! as HTMLElement
+  addUpdateServingsHandler(handler: (newServings: number) => void) {
+    this.parentEl.addEventListener('click', (e) => {
+      const target: HTMLElement = e.target! as HTMLElement;
 
-      const btn: HTMLButtonElement  = target.closest('.btn--tiny')! as HTMLButtonElement
+      const btn: HTMLButtonElement = target.closest(
+        '.btn--tiny'
+      )! as HTMLButtonElement;
 
-      if(!btn.dataset.updateTo) return;
-      const newServ = parseFloat(btn.dataset.updateTo)
+      if (!btn) return;
+      if (!btn.dataset.updateTo) return;
+      const newServ = parseFloat(btn.dataset.updateTo);
 
-      if(newServ > 0) handler(newServ)
-    })
+      if (newServ > 0) handler(newServ);
+    });
+  }
 
+  addBookmarkHandler(handler: (recipe: types.RecipeInput) => void) {
+    if (this.data?.bookmarked === true) return;
+    this.parentEl.addEventListener('click', (e) => {
+      const target: HTMLElement = e.target! as HTMLElement;
+      const btn: HTMLButtonElement = target.closest(
+        '.btn--bookmark'
+      )! as HTMLButtonElement;
+
+      if (!btn || !this.data) return;
+      handler(this.data);
+    });
   }
 }
 

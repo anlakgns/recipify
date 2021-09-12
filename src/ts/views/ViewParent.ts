@@ -90,7 +90,7 @@ export default abstract class View<
       // update changed text
       if (
         !newEl.isEqualNode(curEl) &&
-        newEl.firstChild!.nodeValue!.trim() !== ''
+        newEl.firstChild!?.nodeValue!.trim() !== ''
       ) {
         curEl.textContent = newEl.textContent;
       }
