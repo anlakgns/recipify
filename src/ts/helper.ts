@@ -10,59 +10,6 @@ const timeout = (s: number): Promise<PromiseRejectedResult> => {
   });
 };
 
-// export const getJSON = async function (
-//   url: string,
-//   options?: object
-// ): Promise<types.APIResponseTypes> {
-//   try {
-//     const res = await Promise.race([fetch(url, options), timeout(TIMEOUT_SEC)]);
-
-//     // type guard
-//     if (res.status === 'rejected') return;
-
-//     const data = await res.json();
-
-//     if (!res.ok) {
-//       throw new Error(`${data.message} (${res.status})`);
-//     }
-
-//     return data;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
-// export const sendJSON = async function (
-//   url: string,
-//   uploadData: types.SingleRecipeAPI
-// ): Promise<types.APIResponseTypes> {
-//   try {
-//     const sendData = fetch(url, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(uploadData),
-//     });
-
-//     const res = await Promise.race([sendData, timeout(TIMEOUT_SEC)]);
-
-//     // type guard
-//     if (res.status === 'rejected') return;
-
-//     const data = await res.json();
-
-//     if (!res.ok) {
-//       throw new Error(`${data.message} (${res.status})`);
-//     }
-
-//     console.log(data);
-//     return data;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
 export const AJAX = async (
   url: string,
   uploadData: null | types.SingleRecipeAPI = null
@@ -83,7 +30,7 @@ export const AJAX = async (
     // type guard
     if (res.status === 'rejected') return;
     const data = await res.json();
-
+    
     if (!res.ok) {
       throw new Error(`${data.message} (${res.status})`);
     }

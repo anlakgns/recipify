@@ -6,6 +6,7 @@ import searchView from './views/searchView';
 import resultsView from './views/resultsView';
 import bookmarksView from './views/bookmarksView';
 import paginationView from './views/paginationView';
+import sortView from './views/sortView';
 import addRecipeView from './views/addRecipeView';
 import { MODAL_CLOSE_DELAY } from './config';
 
@@ -49,6 +50,7 @@ const controlSearchResults = async () => {
 
     // render results
     resultsView.render(model.getSearchResultsPage());
+    sortView.render(model.state.search.sortBy)
 
     // render pagination buttons
     paginationView.render(model.state.search);
@@ -117,6 +119,13 @@ const controlAddRecipe = async (newRecipe: types.SingleRecipeAPI) => {
   }
 };
 
+const controlSort = (sortBy: types.SortTypes): void => {
+  // update state
+  model.state.search.sortBy = sortBy;
+  model.sortRecipeResults();  
+  sortView.render(model.state.search.sortBy)
+};
+
 const init = () => {
   recipeView.addRenderHandler(controlRecipes);
   recipeView.addUpdateServingsHandler(controlServings);
@@ -126,6 +135,7 @@ const init = () => {
   addRecipeView.addHandlerShowWindow();
   addRecipeView.addHandlerHideWindow();
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  sortView.addHandlerSort(controlSort);
   bookmarksView.render(model.state.bookmarks);
 };
 init();

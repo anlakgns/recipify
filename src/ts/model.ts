@@ -2,6 +2,7 @@ import * as types from './types';
 import { AJAX } from './helper';
 import { API_URL, RES_PER_PAGE, API_KEY } from './config';
 
+
 export const state: types.State = {
   recipe: null,
   search: {
@@ -9,6 +10,7 @@ export const state: types.State = {
     results: [],
     page: 1,
     resultsPerPage: RES_PER_PAGE,
+    sortBy: types.SortTypes.default,
   },
   bookmarks: [],
 };
@@ -148,6 +150,10 @@ export const uploadRecipe = async (uploadData: types.SingleRecipeAPI) => {
   addBookmark(state.recipe)
 
 }
+
+export const sortRecipeResults = (sortBy: types.SortTypes = types.SortTypes.default) => {
+  console.log(state.search.results)
+} 
 
 // Checking cache 
 const init = () => {

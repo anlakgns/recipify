@@ -11,9 +11,16 @@ export type State = {
     results: MultiRecipeInput[];
     page: number;
     resultsPerPage: number;
+    sortBy: SortTypes;
   };
-  bookmarks: RecipeInput[] | null
+  bookmarks: RecipeInput[] | null;
 };
+
+export enum SortTypes {
+  ingredient = 'ingredient',
+  duration = 'duration',
+  default = 'default',
+}
 
 export interface RecipeInput {
   id: string;
@@ -25,7 +32,7 @@ export interface RecipeInput {
   cookingTime: number;
   ingredients: Ingredient[];
   bookmarked: boolean;
-  key?: string
+  key?: string;
 }
 
 export interface MultiRecipeInput {
@@ -33,7 +40,7 @@ export interface MultiRecipeInput {
   title: string;
   publisher: string;
   image: string;
-  key?: string
+  key?: string;
 }
 
 export interface PaginationInput {
@@ -68,7 +75,7 @@ export interface SingleRecipeAPI {
   cooking_time: number;
   id: string;
   bookmarked?: boolean;
-  key?: string
+  key?: string;
 }
 
 export interface MultiRecipeAPI {
@@ -76,7 +83,7 @@ export interface MultiRecipeAPI {
   title: string;
   publisher: string;
   image_url: string;
-  key?: string
+  key?: string;
 }
 
 export type RenderInputDataTypes =
@@ -84,6 +91,7 @@ export type RenderInputDataTypes =
   | MultiRecipeInput[]
   | PaginationInput
   | RecipeInput[]
+  | SortTypes
 
 export type APIResponseTypes =
   | SingleRecipeResponseAPI
