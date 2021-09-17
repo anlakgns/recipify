@@ -92,6 +92,7 @@ export type RenderInputDataTypes =
   | PaginationInput
   | RecipeInput[]
   | SortTypes
+  | null
 
 export type APIResponseTypes =
   | SingleRecipeResponseAPI

@@ -91,20 +91,22 @@ const controlBookmarks = () => {
   bookmarksView.render(model.state.bookmarks);
 };
 
-const controlAddRecipe = async (newRecipe: types.SingleRecipeAPI) => {
+const controlUploadAddRecipe = async (newRecipe: types.SingleRecipeAPI) => {
   try {
+
+    
     // show spinner
-    addRecipeView.renderSpinner();
+    addRecipeView.renderSpinnerCustom();
 
     await model.uploadRecipe(newRecipe);
     recipeView.render(model.state.recipe);
 
     setTimeout(() => {
-      addRecipeView.toggleWindow();
+      addRecipeView.closeModal();
     }, MODAL_CLOSE_DELAY);
 
     // success message
-    addRecipeView.renderMessage();
+    addRecipeView.renderMessageCustom();
 
     // re-render bookmark view
     bookmarksView.render(model.state.bookmarks);
@@ -132,9 +134,7 @@ const init = () => {
   recipeView.addBookmarkHandler(controlBookmarks);
   searchView.addSearchHandler(controlSearchResults);
   paginationView.addPaginationHandler(controlPagination);
-  addRecipeView.addHandlerShowWindow();
-  addRecipeView.addHandlerHideWindow();
-  addRecipeView.addHandlerUpload(controlAddRecipe);
+  addRecipeView.addRenderHandler(controlUploadAddRecipe);
   sortView.addHandlerSort(controlSort);
   bookmarksView.render(model.state.bookmarks);
 };

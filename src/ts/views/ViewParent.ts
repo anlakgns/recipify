@@ -5,15 +5,16 @@ export default abstract class View<
   U extends types.RenderInputDataTypes
 > {
   protected abstract parentEl: T;
-  protected abstract generateMarkup(data: U): string;
+  protected abstract generateMarkup(data: U | null): string;
   protected abstract errorMessage: string;
   protected abstract message: string;
   protected abstract data: U | null;
 
   public render(data: U | null): void {
-    // data guard
-    if (!data || (Array.isArray(data) && data.length === 0))
-      return this.renderError();
+    // // data guard
+    // if (!data || (Array.isArray(data) && data.length === 0))
+    //   return this.renderError();
+
 
     this.data = data;
     const markup = this.generateMarkup(data);

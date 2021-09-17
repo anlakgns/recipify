@@ -58,3 +58,12 @@
   flex-direction: row;
 
 }
+
+.input-container small {
+  visibility: hidden;
+  position:absolute;
+  bottom:0;
+  left:0;
+}
+
+
