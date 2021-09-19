@@ -13,7 +13,7 @@ class AddRecipeView extends View<HTMLFormElement, null> {
   protected errorMessage = '';
   protected message = 'The recipe was successfully uploaded.';
   protected data: null = null;
-  protected inputInfo = [
+  protected recipeInputInfos = [
     {
       label: 'Title',
       type: 'text',
@@ -44,127 +44,113 @@ class AddRecipeView extends View<HTMLFormElement, null> {
       type: 'number',
     },
   ];
+  protected ingredientInputInfos = [
+    {
+      label: 'Quantity',
+      type: 'number',
+      name: 'quantity',
+    },
+    {
+      label: 'Unit',
+      type: 'text',
+      name: 'unit',
+    },
+    {
+      label: 'Description',
+      type: 'text',
+      name: 'description',
+    },
+  ]
+
+  protected recipeDataMarkup = `
+    <div class="upload__recipe">
+      <h3 class="upload__recipe__heading">Recipe data</h3>
+      <form class="upload__recipe__form"> 
+          ${this.recipeInputInfos.map(item => {
+            return `
+              <div class="upload__recipe__form--item" id=${item.name}>
+                <label>${item.label}</label>
+                <input name=${item.name} type=${item.type} />
+              </div>
+            ` 
+          }).join('')}
+      </form>
+    </div>
+  `
+
+  protected ingredientDataMarkup = `
+    <div class="upload__ingredient">
+      <h3 class="upload__ingredient__heading">Ingredients</h3>
+      <form class="upload__ingredient__form">
+        <div class="upload__ingredient__form__inputs">
+          ${this.ingredientInputInfos.map(item =>  {
+            return `
+              <div class="upload__ingredient__form__inputs--item">
+                <label>${item.label}</label>
+                <input value="0.5" type=${item.type} required name=${item.name} />
+              </div>
+            `
+          }).join('')}
+        </div>
+        <div class="upload__ingredient__form__button">
+          <button >
+            Add
+          </button>
+        </div> 
+      </form>
+      <div class="upload__ingredient__chips">
+        <div class="upload__ingredient__chips--item">
+          <span>Rice - 0.5 kg</span>
+          <button class="btn-ingredients">
+            <svg>
+              <use href="src/img/icons.svg#icon-exit"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+    </div>
+  `
+
+
 
   generateMarkup() {
     return `
-      <div class="overlay"></div>
-
-      <div class="add-recipe-window">
-        
-        <button class="btn--close-modal">&times;</button>
-        
-        <form class="upload">
-          <div class="upload__column__recipe">
-            <h3 class="upload__heading">Recipe data</h3>
-              
-                  <div class="upload__column__recipe--item" id="title">
-                    <label>Title</label>
-                    <input name="title" type="text" />  
-                  </div>
-                  <div class="upload__column__recipe--item" id="URL">
-                    <label>Source Url</label>
-                    <input name="URL" type="text" />  
-                  </div>
-                  <div class="upload__column__recipe--item" id="image">
-                    <label>Image Url</label>
-                    <input name="image" type="text" />  
-                  </div>
-                  <div class="upload__column__recipe--item" id="publisher">
-                    <label>Publisher</label>
-                    <input name="publisher" type="text" />  
-                  </div>
-                  <div class="upload__column__recipe--item" id=servings>
-                    <label>Cooking Time</label>
-                    <input name="servings" type="number" />  
-                  </div>
-                  <div class="upload__column__recipe--item" id=servings>
-                    <label>Servings</label>
-                    <input name="servings" type="number" />  
-                  </div>
-                
-            
-          </div> 
-              
-
-          <div class="upload__column__ingredient">
-            <h3 class="upload__heading">Ingredients</h3>
-            
-            <div class="upload__column__ingredient__inputs">
-              <div>
-                <div class="upload__column__ingredient__inputs--item">
-                <label>Quantity</label>
-                <input
-                  value="0.5"
-                  type="number"
-                  required
-                  name="quantity"
-                />
-                </div>
-                <div class="upload__column__ingredient__inputs--item">
-                  <label>Unit</label>
-                  <input
-                    value="kg"
-                    type="text"
-                    required
-                    name="unit"
-                  />
-                </div>
-                <div class="upload__column__ingredient__inputs--item">
-                  <label>Description</label>
-                  <input
-                    value="Rice"
-                    type="text"
-                    required
-                    name="description"
-                  />
-                </div>               
-              </div>
-              <div>
-                  <button class="add__btn">
-                    Add
-                  </button>
-                </div>
-            </div>
-
-            <div class="upload__column__ingredient__outputs">
-              <div class="upload__column__ingredient__outputs--item">
-              <span>Rice - 0.5 kg</span>
-              <button class="btn-ingredients">
-                <svg>
-                  <use href="src/img/icons.svg#icon-exit"></use>
-                </svg>
-              </button>
-              </div>
-            
-            
-            </div>
-
-           
-          </div>
-
-            <button class="btn upload__btn">
-              <svg>
-                <use href="src/img/icons.svg#icon-upload-cloud"></use>
-              </svg>
-              <span>Upload</span>
-            </button>
-        </form>
-      
+    <div class="overlay"></div>
+    <div class="add-recipe-window">
+      <button class="btn--close-modal">&times;</button>
+      <div class="upload">
+        ${this.recipeDataMarkup}
+        ${this.ingredientDataMarkup}   
+        <button class="btn upload__btn">
+          <svg>
+            <use href="src/img/icons.svg#icon-upload-cloud"></use>
+          </svg>
+          <span>Upload</span>
+        </button>     
       </div>
+    </div>
+    
     `;
   }
 
   addRenderHandler(uploadHandler: (newRecipe: types.SingleRecipeAPI) => void) {
+    this.render(null);
+
     // mount
     this.btnOpen.addEventListener('click', (e) => {
       // render form
       this.render(null);
 
       // setup listener for inputs
-      this.addListenerUpload(uploadHandler);
+      // this.addListenerUpload(uploadHandler);
 
       // setup listener to close modal.
       this.addListenerCloseModal();
+
+      // setup ingredient button listener
+     
+
     });
   }
 
@@ -224,6 +210,7 @@ class AddRecipeView extends View<HTMLFormElement, null> {
       setSuccessFor(title, 'la');
     }
   }
+
 
   protected addListenerUpload(
     handler: (newRecipe: types.SingleRecipeAPI) => void
@@ -301,6 +288,23 @@ class AddRecipeView extends View<HTMLFormElement, null> {
         this.clear();
       }
     });
+  }
+
+  protected addListenerIngredientButton() {
+    const form: HTMLFormElement = this.parentEl.querySelector('.ingredient-form') as HTMLFormElement
+    const btn: HTMLButtonElement = form.querySelector('add__ingredient__btn') as HTMLButtonElement
+    
+    form.addEventListener('submit',(e)=> {
+      e.stopPropagation();
+    })
+
+    btn.addEventListener("click", (e)=> {
+      e.stopPropagation();
+      console.log(new FormData(form))
+    }) 
+
+
+    ;
   }
 
   closeModal() {

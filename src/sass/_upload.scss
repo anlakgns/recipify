@@ -40,190 +40,331 @@
 .upload {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem 6rem;
+  grid-template-rows: 5fr 1fr;
+  gap: 4rem;
 
-  &__column__recipe {
-    display: grid;
-    grid-template-rows: 2fr repeat(6, 1fr);
-    align-items: center;
-
-    &--item {
-      display: grid;
-      grid-template-columns: 1fr 2.8fr;
-      align-items: center;
-
-      & label {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: inherit;
-      }
-      & input {
-        font-size: 1.5rem;
-        padding: 0.8rem 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 0.5rem;
-        transition: all 0.2s;
-
-        &::placeholder {
-          color: $color-grey-light-3;
-        }
-
-        &:focus {
-          outline: none;
-          border: 1px solid $color-primary;
-          background-color: $color-grey-light-1;
-        }
-      }
-    }
-  }
-
-  &__column__ingredient {
-    display: grid;
-    grid-template-rows: 2fr 3fr 3fr;
-    align-items: center;
-    gap: 1rem;
-
-    &__inputs {
-      display: grid;
-
-      grid-template-columns: 4fr 1fr;
-      gap: 1rem;
-      border: 0.6rem solid $color-grad-2;
-      padding: 1rem 1rem;
-      border-radius: 2rem;
-      align-items: center;
-      margin-bottom: 1rem;
-
-      &--item {
-        display: grid;
-        grid-template-columns: 40% 50%;
-        align-items: center;
-        &:not(:last-child) {
-          margin-bottom: 1rem;
-        }
-
-        & label {
-          font-size: 1.5rem;
-          font-weight: 600;
-          color: inherit;
-        }
-        & input {
-          font-size: 1.5rem;
-          padding: 0.8rem 0.5rem;
-          border: 1px solid #ddd;
-          border-radius: 0.5rem;
-          transition: all 0.2s;
-
-          &::placeholder {
-            color: $color-grey-light-3;
-          }
-
-          &:focus {
-            outline: none;
-            border: 1px solid $color-primary;
-            background-color: $color-grey-light-1;
-          }
-        }
-      }
-
-      & button {
-        background-color: $color-primary;
-        font-size: 1.5rem;
-        padding: 0.6rem 1.2rem;
-        border-radius: 6rem;
-        border: none;
-        color: #fff;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        transition: all 0.2s;
-
-        &:hover {
-          transform: scale(1.05);
-        }
-
-        &:focus {
-          outline: none;
-        }
-      }
-    }
-
-    &__outputs {
-      display: flex;
-      align-items: flex-start;
-      justify-content:flex-start;
-      flex-wrap: wrap;
-      gap: 1rem;
-      width: 100%;
-      height: 100%;
-
-      &--item {
-        background-color: #5b84c4;
-        font-size: 1.3rem;
-        width: 13rem;
-        height: 3rem;
-        border-radius: 10rem;
-        border: none;
-        color: #fff;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-        
-
-        &:hover {
-          transform: scale(1.05);
-        }
-
-        &:focus {
-          outline: none;
-        }
-
-        & > *:first-child {
-          margin-right: 1rem;
-        }
-        & span {
-          margin-left: 0.6rem;
-        }
-        & button {
-          background-color: transparent;
-          width: 3rem;
-          height: 3rem;
-          border-radius: 10rem;
-          border: none;
-          color: #fff;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s;
-
-          & svg {
-            height: 1.8rem;
-            width: 1.8rem;
-            fill: currentColor;
-          }
-        }
-      }
-    }
-  }
-
-  &__heading {
-    font-size: 2.25rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    grid-column: 1/-1;
-  }
-
-  &__btn {
-    grid-column: 1 / -1;
-    justify-self: center;
+  & svg {
+    height: 1.8rem;
+    width: 1.8rem;
+    fill: currentColor;
   }
 
   & button {
     grid-column: 1 / span 2;
     justify-self: center;
+    margin-top: 1rem;
+  }
+
+  & input {
+    font-size: 1.5rem;
+    padding: 0.8rem 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+
+    &::placeholder {
+      color: $color-grey-light-3;
+    }
+
+    &:focus {
+      outline: none;
+      border: 1px solid $color-primary;
+      background-color: $color-grey-light-1;
+    }
+  }
+
+  & label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: inherit;
+  }
+
+  &__recipe {
+    display: grid;
+    grid-template-rows: 2fr 6fr;
+
+    &__heading {
+      font-size: 2rem;
+    }
+
+    &__form {
+      display: grid;
+      grid-template-rows: repeat(1fr, 6);
+      gap: 1rem;
+
+      &--item {
+        display: grid;
+        grid-template-columns: 2fr 4fr;
+      }
+    }
+    &__chips {
+      background-color: blue;
+    }
+  }
+
+  &__ingredient {
+    display: grid;
+    grid-template-rows: 2fr 3fr 3fr;
+
+    &__heading {
+      font-size: 2rem;
+      grid-column: 1 / 3;
+    }
+
+    &__form {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      border: 4px solid $color-primary;
+      padding: 1.5rem 1.2rem;
+      border-radius: 3rem;
+
+      &__inputs {
+        display: grid;
+        grid-template-rows: repeat(3, 1fr);
+        gap: 0.5rem;
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+
+        &--item {
+          display: grid;
+          grid-template-columns: 1fr 2fr;
+        }
+      }
+      &__button {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        & button {
+          background-color: $color-primary;
+          font-size: 1.5rem;
+          padding: 0.6rem 1.2rem;
+          border-radius: 6rem;
+          border: none;
+          color: #fff;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          transition: all 0.2s;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+    }
+
+    &__chips {
+      grid-row: 3/4;
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      font-size: 1.2rem;
+
+      &--item {
+        background-color: $color-grad-2;
+        width: 12rem;
+        height: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1rem;
+      }
+    }
   }
 }
+
+// .upload {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   gap: 4rem 6rem;
+
+//   &__column__recipe {
+//     display: grid;
+//     grid-template-rows: 2fr repeat(6, 1fr);
+//     align-items: center;
+
+//     &--item {
+//       display: grid;
+//       grid-template-columns: 1fr 2.8fr;
+//       align-items: center;
+
+//       & label {
+//         font-size: 1.5rem;
+//         font-weight: 600;
+//         color: inherit;
+//       }
+//       & input {
+//         font-size: 1.5rem;
+//         padding: 0.8rem 0.5rem;
+//         border: 1px solid #ddd;
+//         border-radius: 0.5rem;
+//         transition: all 0.2s;
+
+//         &::placeholder {
+//           color: $color-grey-light-3;
+//         }
+
+//         &:focus {
+//           outline: none;
+//           border: 1px solid $color-primary;
+//           background-color: $color-grey-light-1;
+//         }
+//       }
+//     }
+//   }
+
+//   &__column__ingredient {
+//     display: grid;
+//     grid-template-rows: 2fr 3fr 3fr;
+//     align-items: center;
+//     gap: 1rem;
+
+//     &__inputs {
+//       display: grid;
+//       grid-template-columns: 4fr 1fr;
+//       gap: 1rem;
+//       border: 0.6rem solid $color-grad-2;
+//       padding: 1rem 1rem;
+//       border-radius: 2rem;
+//       align-items: center;
+//       margin-bottom: 1rem;
+
+//       &--item {
+//         display: grid;
+//         grid-template-columns: 40% 50%;
+//         align-items: center;
+//         &:not(:last-child) {
+//           margin-bottom: 1rem;
+//         }
+
+//         & label {
+//           font-size: 1.5rem;
+//           font-weight: 600;
+//           color: inherit;
+//         }
+//         & input {
+//           font-size: 1.5rem;
+//           padding: 0.8rem 0.5rem;
+//           border: 1px solid #ddd;
+//           border-radius: 0.5rem;
+//           transition: all 0.2s;
+
+//           &::placeholder {
+//             color: $color-grey-light-3;
+//           }
+
+//           &:focus {
+//             outline: none;
+//             border: 1px solid $color-primary;
+//             background-color: $color-grey-light-1;
+//           }
+//         }
+//       }
+
+//       & button {
+//         background-color: $color-primary;
+//         font-size: 1.5rem;
+//         padding: 0.6rem 1.2rem;
+//         border-radius: 6rem;
+//         border: none;
+//         color: #fff;
+//         cursor: pointer;
+//         display: flex;
+//         align-items: center;
+//         transition: all 0.2s;
+
+//         &:hover {
+//           transform: scale(1.05);
+//         }
+
+//         &:focus {
+//           outline: none;
+//         }
+//       }
+//     }
+
+//     &__outputs {
+//       display: flex;
+//       align-items: flex-start;
+//       justify-content:flex-start;
+//       flex-wrap: wrap;
+//       gap: 1rem;
+//       width: 100%;
+//       height: 100%;
+
+//       &--item {
+//         background-color: #5b84c4;
+//         font-size: 1.3rem;
+//         width: 13rem;
+//         height: 3rem;
+//         border-radius: 10rem;
+//         border: none;
+//         color: #fff;
+//         cursor: pointer;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         transition: all 0.2s;
+
+//         &:hover {
+//           transform: scale(1.05);
+//         }
+
+//         &:focus {
+//           outline: none;
+//         }
+
+//         & > *:first-child {
+//           margin-right: 1rem;
+//         }
+//         & span {
+//           margin-left: 0.6rem;
+//         }
+//         & button {
+//           background-color: transparent;
+//           width: 3rem;
+//           height: 3rem;
+//           border-radius: 10rem;
+//           border: none;
+//           color: #fff;
+//           cursor: pointer;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           transition: all 0.2s;
+
+//           & svg {
+//             height: 1.8rem;
+//             width: 1.8rem;
+//             fill: currentColor;
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   &__heading {
+//     font-size: 2.25rem;
+//     font-weight: 700;
+//     text-transform: uppercase;
+//     margin-bottom: 1rem;
+//     grid-column: 1/-1;
+//   }
+
+//   &__btn {
+//     grid-column: 1 / -1;
+//     justify-self: center;
+//   }
+
+//   & button {
+//     grid-column: 1 / span 2;
+//     justify-self: center;
+//   }
+// }
