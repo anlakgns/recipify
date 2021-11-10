@@ -1,11 +1,9 @@
-export type Ingredient = {
-  quantity: number;
-  unit: string;
-  description: string;
-};
-
 export type State = {
-  recipe: RecipeInput | null;
+  recipe: RenderRecipe | null;
+  form: {
+    recipeInputs: RecipeInput | null;
+    ingredientInputs: IngredientInput[] 
+  };
   search: {
     query: string;
     results: MultiRecipeInput[];
@@ -13,7 +11,7 @@ export type State = {
     resultsPerPage: number;
     sortBy: SortTypes;
   };
-  bookmarks: RecipeInput[] | null;
+  bookmarks: RenderRecipe[] | null;
 };
 
 export enum SortTypes {
@@ -22,7 +20,7 @@ export enum SortTypes {
   default = 'default',
 }
 
-export interface RecipeInput {
+export interface RenderRecipe {
   id: string;
   title: string;
   publisher: string;
@@ -31,6 +29,30 @@ export interface RecipeInput {
   servings: number;
   cookingTime: number;
   ingredients: Ingredient[];
+  bookmarked: boolean;
+  key?: string;
+}
+
+export type Ingredient = {
+  quantity: number;
+  unit: number;
+  description: string;
+};
+
+export type IngredientInput = {
+  quantity: number;
+  unit: number;
+  description: string;
+};
+
+export interface RecipeInput {
+  id: string;
+  title: string;
+  publisher: string;
+  source_url: string;
+  image_url: string;
+  servings: number;
+  cooking_time: number;
   bookmarked: boolean;
   key?: string;
 }
@@ -86,13 +108,15 @@ export interface MultiRecipeAPI {
   key?: string;
 }
 
-export type RenderInputDataTypes =
+export type ViewInputs =
   | RecipeInput
   | MultiRecipeInput[]
   | PaginationInput
   | RecipeInput[]
   | SortTypes
-  | null
+  | RenderRecipe
+  | IngredientInput[]
+  | null;
 
 export type APIResponseTypes =
   | SingleRecipeResponseAPI

@@ -2,158 +2,156 @@ import View from './ViewParent';
 import * as types from '../types';
 import { idMaker } from '../helper';
 
-class AddRecipeView extends View<HTMLFormElement, null> {
+class AddRecipeView extends View<HTMLFormElement, types.IngredientInput[]> {
   protected parentEl: HTMLFormElement = document.querySelector(
-    '.add-recipe'
+    '.upload__ingredient__chips'
   )! as HTMLFormElement;
+  protected uploadContainer: HTMLDivElement = document.querySelector(
+    '.upload'
+  )! as HTMLDivElement;
   protected btnOpen: HTMLButtonElement = document.querySelector(
     '.nav__btn--add-recipe'
   )! as HTMLButtonElement;
+  protected btnClose: HTMLButtonElement = document.querySelector(
+    '.btn--close-modal'
+  )! as HTMLButtonElement;
+
+  protected recipeWindow: HTMLDivElement = document.querySelector(
+    '.add-recipe-window'
+  ) as HTMLDivElement;
+  protected overlay: HTMLDivElement = document.querySelector(
+    '.overlay'
+  ) as HTMLDivElement;
+
+  protected formRecipe: HTMLFormElement = document.querySelector(
+    '.upload__recipe__form'
+  ) as HTMLFormElement;
+
+  protected formIngredient: HTMLFormElement = document.querySelector(
+    '.upload__ingredient__form'
+  ) as HTMLFormElement;
+
+  protected btnAddIngredient: HTMLButtonElement = document.querySelector(
+    '.upload__ingredient__form__button'
+  ) as HTMLButtonElement;
 
   protected errorMessage = '';
   protected message = 'The recipe was successfully uploaded.';
-  protected data: null = null;
-  protected recipeInputInfos = [
-    {
-      label: 'Title',
-      type: 'text',
-      name: 'title',
-    },
-    {
-      label: 'URL',
-      name: 'sourceUrl',
-      type: 'text',
-    },
-    {
-      label: 'Image URL',
-      name: 'image',
-    },
-    {
-      label: 'Publisher',
-      name: 'publisher',
-      type: 'text',
-    },
-    {
-      label: 'Prep time',
-      name: 'cookingTime',
-      type: 'number',
-    },
-    {
-      label: 'Servings',
-      name: 'servings',
-      type: 'number',
-    },
-  ];
-  protected ingredientInputInfos = [
-    {
-      label: 'Quantity',
-      type: 'number',
-      name: 'quantity',
-    },
-    {
-      label: 'Unit',
-      type: 'text',
-      name: 'unit',
-    },
-    {
-      label: 'Description',
-      type: 'text',
-      name: 'description',
-    },
-  ]
+  protected data: types.IngredientInput[] | null = null;
 
-  protected recipeDataMarkup = `
-    <div class="upload__recipe">
-      <h3 class="upload__recipe__heading">Recipe data</h3>
-      <form class="upload__recipe__form"> 
-          ${this.recipeInputInfos.map(item => {
-            return `
-              <div class="upload__recipe__form--item" id=${item.name}>
-                <label>${item.label}</label>
-                <input name=${item.name} type=${item.type} />
-              </div>
-            ` 
-          }).join('')}
-      </form>
-    </div>
-  `
-
-  protected ingredientDataMarkup = `
-    <div class="upload__ingredient">
-      <h3 class="upload__ingredient__heading">Ingredients</h3>
-      <form class="upload__ingredient__form">
-        <div class="upload__ingredient__form__inputs">
-          ${this.ingredientInputInfos.map(item =>  {
-            return `
-              <div class="upload__ingredient__form__inputs--item">
-                <label>${item.label}</label>
-                <input value="0.5" type=${item.type} required name=${item.name} />
-              </div>
-            `
-          }).join('')}
-        </div>
-        <div class="upload__ingredient__form__button">
-          <button >
-            Add
-          </button>
-        </div> 
-      </form>
-      <div class="upload__ingredient__chips">
-        <div class="upload__ingredient__chips--item">
-          <span>Rice - 0.5 kg</span>
-          <button class="btn-ingredients">
-            <svg>
-              <use href="src/img/icons.svg#icon-exit"></use>
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-    </div>
-  `
-
-
-
-  generateMarkup() {
-    return `
-    <div class="overlay"></div>
-    <div class="add-recipe-window">
-      <button class="btn--close-modal">&times;</button>
-      <div class="upload">
-        ${this.recipeDataMarkup}
-        ${this.ingredientDataMarkup}   
-        <button class="btn upload__btn">
-          <svg>
-            <use href="src/img/icons.svg#icon-upload-cloud"></use>
-          </svg>
-          <span>Upload</span>
-        </button>     
-      </div>
-    </div>
-    
-    `;
+  constructor() {
+    super();
+    this.addHandlerShowWindow();
+    this.addHandlerHideWindow();
+    this.addListenerCloseModal();
   }
 
-  addRenderHandler(uploadHandler: (newRecipe: types.SingleRecipeAPI) => void) {
-    this.render(null);
+  toggleWindow() {
+    this.recipeWindow.classList.toggle('hidden');
+    this.overlay.classList.toggle('hidden');
+  }
 
-    // mount
-    this.btnOpen.addEventListener('click', (e) => {
-      // render form
-      this.render(null);
+  protected addHandlerShowWindow() {
+    this.btnOpen.addEventListener('click', this.toggleWindow.bind(this));
+  }
 
-      // setup listener for inputs
-      // this.addListenerUpload(uploadHandler);
+  protected addHandlerHideWindow() {
+    this.btnClose.addEventListener('click', this.toggleWindow.bind(this));
+    this.overlay.addEventListener('click', this.toggleWindow.bind(this));
+  }
 
-      // setup listener to close modal.
-      this.addListenerCloseModal();
+  generateMarkup(ingredients: types.IngredientInput[]): string {
+    const chipMarkups = ingredients.map((ing) => {
+      return `
+    <div class="upload__ingredient__chips--item">
+    <span
+      >${ing.description} - ${ing.quantity}
+      ${ing.unit}</span
+    >
+    <button class="btn-ingredients">
+      <svg>
+        <use href="src/img/icons.svg#icon-exit"></use>
+      </svg>
+    </button>
+  </div>
+    `;
+    });
+    return chipMarkups.join('');
+  }
 
-      // setup ingredient button listener
-     
+  addUploadRecipeHandler(
+    uploadHandler: (newRecipe: types.RecipeInput) => void,
+    ingredientHandler: (newIngredient: types.IngredientInput) => void
+  ) {
+    // setup listener for recipe
+    this.addListenerUpload(uploadHandler);
 
+    // setup listener for ingredient
+    this.addListenerIngredient(ingredientHandler);
+  }
+
+ 
+
+  protected addListenerUpload(handler: (newRecipe: types.RecipeInput) => void) {
+    this.formRecipe.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // getting data from form
+      const data = [...new FormData(this.formRecipe)];
+      const obj = Object.fromEntries(data);
+
+      // formatted recipe
+      const recipe: types.RecipeInput = {
+        id: idMaker() as string,
+        title: obj.title as string,
+        publisher: obj.publisher as string,
+        source_url: obj.sourceUrl as string,
+        image_url: obj.image as string,
+        servings: +obj.servings as number,
+        cooking_time: +obj.cookingTime as number,
+        bookmarked: false as boolean,
+      };
+
+      // send to handler
+      handler(recipe);
     });
   }
 
+  protected addListenerCloseModal() {
+    this.uploadContainer.addEventListener('click', (e) => {
+      const target: HTMLElement = e.target! as HTMLElement;
+      const btn: HTMLButtonElement = target.closest(
+        '.btn--close-modal'
+      )! as HTMLButtonElement;
+      const overlay: HTMLDivElement = target.closest(
+        '.overlay'
+      )! as HTMLDivElement;
+
+      if (btn || overlay) {
+        this.clear();
+      }
+    });
+  }
+
+  protected addListenerIngredient(
+    handler: (ingredientInputs: types.IngredientInput) => void
+  ) {
+    this.formIngredient.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const data = [...new FormData(this.formIngredient)];
+      const dataObj = Object.fromEntries(data);
+      const formattedData: types.Ingredient = {
+        unit: parseFloat(dataObj.unit as string),
+        quantity: parseFloat(dataObj.quantity as string),
+        description: dataObj.description as string,
+      };
+      handler(formattedData);
+    });
+  }
+
+
+  // validations
   protected checkInputs() {
     const title: HTMLInputElement = this.parentEl.getElementById(
       'label'
@@ -212,107 +210,9 @@ class AddRecipeView extends View<HTMLFormElement, null> {
   }
 
 
-  protected addListenerUpload(
-    handler: (newRecipe: types.SingleRecipeAPI) => void
-  ) {
-    const form: HTMLFormElement = this.parentEl.querySelector(
-      '.upload'
-    ) as HTMLFormElement;
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      // validation
-
-      /*
-        I' am not sure the whole data formatting logic should be here or model.
-
-        Needs to be refactored !! -- Too long for a basic operation like this.
-      */
-
-      // getting data from form
-      const data = [...new FormData(form)];
-      const obj = Object.fromEntries(data);
-
-      // counting ingredient amount for loop
-      const objKeys = Object.keys(obj);
-      const ingredientLenght = objKeys.filter((ing) =>
-        ing.includes('ingredient')
-      ).length;
-
-      // format the ingredients
-      let formattedIngredients = [];
-      for (let i = 1; i <= ingredientLenght; i++) {
-        const ingredient = obj[`ingredient-${i}`] as string;
-        const ingredientArr = ingredient.split(',');
-        const isEmpty = ingredientArr.some((ing) => ing === '');
-        if (isEmpty) continue;
-
-        const newIngredient = {
-          quantity: +ingredientArr[0],
-          unit: ingredientArr[1],
-          description: ingredientArr[2],
-        };
-        formattedIngredients.push(newIngredient);
-      }
-
-      // formatted recipe
-      const recipe: types.SingleRecipeAPI = {
-        id: idMaker() as string,
-        title: obj.title as string,
-        publisher: obj.publisher as string,
-        source_url: obj.sourceUrl as string,
-        image_url: obj.image as string,
-        servings: +obj.servings as number,
-        cooking_time: +obj.cookingTime as number,
-        ingredients: formattedIngredients as types.Ingredient[],
-        bookmarked: false as boolean,
-      };
-
-      // send to handler
-      handler(recipe);
-    });
-  }
-
-  protected addListenerCloseModal() {
-    this.parentEl.addEventListener('click', (e) => {
-      const target: HTMLElement = e.target! as HTMLElement;
-      const btn: HTMLButtonElement = target.closest(
-        '.btn--close-modal'
-      )! as HTMLButtonElement;
-      const overlay: HTMLDivElement = target.closest(
-        '.overlay'
-      )! as HTMLDivElement;
-
-      if (btn || overlay) {
-        this.clear();
-      }
-    });
-  }
-
-  protected addListenerIngredientButton() {
-    const form: HTMLFormElement = this.parentEl.querySelector('.ingredient-form') as HTMLFormElement
-    const btn: HTMLButtonElement = form.querySelector('add__ingredient__btn') as HTMLButtonElement
-    
-    form.addEventListener('submit',(e)=> {
-      e.stopPropagation();
-    })
-
-    btn.addEventListener("click", (e)=> {
-      e.stopPropagation();
-      console.log(new FormData(form))
-    }) 
-
-
-    ;
-  }
-
-  closeModal() {
-    this.clear();
-  }
-
+  // Feedbacks
   protected clearCustom() {
-    this.parentEl.querySelector('.upload')!.innerHTML = '';
+    this.uploadContainer.innerHTML = '';
   }
 
   renderSpinnerCustom() {
@@ -324,9 +224,7 @@ class AddRecipeView extends View<HTMLFormElement, null> {
       </div>
     `;
     this.clearCustom();
-    this.parentEl
-      .querySelector('.upload')!
-      .insertAdjacentHTML('afterbegin', markup);
+    this.uploadContainer.insertAdjacentHTML('afterbegin', markup);
   }
 
   renderMessageCustom(message: string = this.message) {
@@ -342,9 +240,7 @@ class AddRecipeView extends View<HTMLFormElement, null> {
     `;
 
     this.clearCustom();
-    this.parentEl
-      .querySelector('.upload')!
-      .insertAdjacentHTML('afterbegin', markup);
+    this.uploadContainer.insertAdjacentHTML('afterbegin', markup);
   }
 }
 

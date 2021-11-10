@@ -102,7 +102,76 @@
 
     <!-- add recipe modal -->
     <div class="add-recipe">
-      
+      <div class="overlay hidden"></div>
+      <div class="add-recipe-window hidden">
+        <button class="btn--close-modal">&times;</button>
+        <div class="upload">
+
+          <!-- add recipe form -->
+          <div class="upload__recipe">
+            <h3 class="upload__recipe__heading">Recipe data</h3>
+            <form class="upload__recipe__form">
+              <div class="upload__recipe__form--item" id="quantity">
+                <label>Title</label>
+                <input name="title" type="text" />
+              </div>
+              <div class="upload__recipe__form--item" id="unit">
+                <label>URL</label>
+                <input name="sourceURL" type="text" />
+              </div>
+              <div class="upload__recipe__form--item" id="description">
+                <label>Image URL</label>
+                <input name="image" type="text" />
+              </div>
+              <div class="upload__recipe__form--item" id="description">
+                <label>Publisher</label>
+                <input name="publisher" type="text" />
+              </div>
+              <div class="upload__recipe__form--item" id="description">
+                <label>Cooking time</label>
+                <input name="cookingTime" type="text" />
+              </div>
+              <div class="upload__recipe__form--item" id="description">
+                <label>Servings</label>
+                <input name="servings" type="number" />
+              </div>
+              <button class="btn upload__recipe__form__btn">
+                <svg>
+                  <use href="src/img/icons.svg#icon-upload-cloud"></use>
+                </svg>
+                <span>Upload</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- add ingredients form -->
+          <div class="upload__ingredient">
+            <h3 class="upload__ingredient__heading">Ingredients</h3>
+            <form class="upload__ingredient__form">
+              <div class="upload__ingredient__form__inputs">
+                <div class="upload__ingredient__form__inputs--item">
+                  <label>Description</label>
+                  <input type="text" required name="description" />
+                </div>
+                <div class="upload__ingredient__form__inputs--item">
+                  <label>Unit</label>
+                  <input type="text" required name="unit" />
+                </div>
+                <div class="upload__ingredient__form__inputs--item">
+                  <label>Quantity</label>
+                  <input type="number" required name="quantity" />
+                </div>
+              </div>
+              <div class="upload__ingredient__form__button">
+                <button>Add</button>
+              </div>
+            </form>
+            <div class="upload__ingredient__chips">
+                  <!-- ingredient chips will come here -->
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>

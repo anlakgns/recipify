@@ -50,7 +50,7 @@ const controlSearchResults = async () => {
 
     // render results
     resultsView.render(model.getSearchResultsPage());
-    sortView.render(model.state.search.sortBy)
+    sortView.render(model.state.search.sortBy);
 
     // render pagination buttons
     paginationView.render(model.state.search);
@@ -91,10 +91,8 @@ const controlBookmarks = () => {
   bookmarksView.render(model.state.bookmarks);
 };
 
-const controlUploadAddRecipe = async (newRecipe: types.SingleRecipeAPI) => {
+const controlUploadAddRecipe = async (newRecipe: types.RecipeInput) => {
   try {
-
-    
     // show spinner
     addRecipeView.renderSpinnerCustom();
 
@@ -102,7 +100,7 @@ const controlUploadAddRecipe = async (newRecipe: types.SingleRecipeAPI) => {
     recipeView.render(model.state.recipe);
 
     setTimeout(() => {
-      addRecipeView.closeModal();
+      addRecipeView.toggleWindow();
     }, MODAL_CLOSE_DELAY);
 
     // success message
@@ -114,18 +112,22 @@ const controlUploadAddRecipe = async (newRecipe: types.SingleRecipeAPI) => {
     // change ID in URL
     if (!model.state.recipe) return;
     window.history.pushState(null, '', `#${model.state.recipe.id}`);
-
-    
   } catch (err) {
     console.log(err);
   }
 };
 
+const controlUploadAddIngredient = (newIngredient: types.IngredientInput) => {
+  model.addIngredients(newIngredient);
+
+  addRecipeView.render(model.state.form.ingredientInputs);
+};
+
 const controlSort = (sortBy: types.SortTypes): void => {
   // update state
   model.state.search.sortBy = sortBy;
-  model.sortRecipeResults();  
-  sortView.render(model.state.search.sortBy)
+  model.sortRecipeResults();
+  sortView.render(model.state.search.sortBy);
 };
 
 const init = () => {
@@ -134,7 +136,10 @@ const init = () => {
   recipeView.addBookmarkHandler(controlBookmarks);
   searchView.addSearchHandler(controlSearchResults);
   paginationView.addPaginationHandler(controlPagination);
-  addRecipeView.addRenderHandler(controlUploadAddRecipe);
+  addRecipeView.addUploadRecipeHandler(
+    controlUploadAddRecipe,
+    controlUploadAddIngredient
+  );
   sortView.addHandlerSort(controlSort);
   bookmarksView.render(model.state.bookmarks);
 };

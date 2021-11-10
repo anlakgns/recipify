@@ -2,9 +2,12 @@ import * as types from './types';
 import { AJAX } from './helper';
 import { API_URL, RES_PER_PAGE, API_KEY } from './config';
 
-
 export const state: types.State = {
   recipe: null,
+  form: {
+    recipeInputs: null,
+    ingredientInputs: [],
+  },
   search: {
     query: '',
     results: [],
@@ -16,20 +19,19 @@ export const state: types.State = {
 };
 
 export const createRecipeObject = (data: types.SingleRecipeAPI) => {
-    return {
-      id: data.id,
-      title: data.title,
-      publisher: data.publisher,
-      sourceURL: data.source_url,
-      image: data.image_url,
-      servings: data.servings,
-      cookingTime: data.cooking_time,
-      ingredients: data.ingredients,
-      bookmarked: false, 
-      ...(data.key && {key: data.key})
-    };
-
-}
+  return {
+    id: data.id,
+    title: data.title,
+    publisher: data.publisher,
+    sourceURL: data.source_url,
+    image: data.image_url,
+    servings: data.servings,
+    cookingTime: data.cooking_time,
+    ingredients: data.ingredients,
+    bookmarked: false,
+    ...(data.key && { key: data.key }),
+  };
+};
 
 export const fetchRecipe = async function (id: string): Promise<void> {
   try {
@@ -41,7 +43,7 @@ export const fetchRecipe = async function (id: string): Promise<void> {
     if (!('recipe' in data.data)) return;
 
     // updating state
-    state.recipe = createRecipeObject(data.data.recipe)
+    state.recipe = createRecipeObject(data.data.recipe);
 
     // bookmarked check
     if (state.bookmarks?.some((bookmark) => bookmark.id === id)) {
@@ -77,7 +79,7 @@ export const fetchRecipeResults = async function (
         title: rec.title,
         publisher: rec.publisher,
         image: rec.image_url,
-        ...(rec.key && {key: rec.key})
+        ...(rec.key && { key: rec.key }),
       };
     });
     state.search.page = 1;
@@ -110,7 +112,7 @@ export const updateServings = (newServings: number): void => {
   state.recipe.servings = newServings;
 };
 
-export const addBookmark = (recipe: types.RecipeInput): void => {
+export const addBookmark = (recipe: types.RenderRecipe): void => {
   // add recipe to bookmark
   state.bookmarks!.push(recipe);
   console.log(state.bookmarks);
@@ -139,25 +141,36 @@ export const removeBookmark = (id: string): void => {
   persistBookmarks();
 };
 
-export const uploadRecipe = async (uploadData: types.SingleRecipeAPI) => {
-  const data = await AJAX(`${API_URL}?key=${API_KEY}`,uploadData )
+export const uploadRecipe = async (uploadData: types.RecipeInput) => {
+  // transform RecipeInput ot SingleRecipeAPI type
+  const formattedUploadData = {
+    ...uploadData,
+    ingredients: state.form.ingredientInputs,
+  };
+
+  const data = await AJAX(`${API_URL}?key=${API_KEY}`, formattedUploadData);
 
   // type guards
   if (!data) return;
   if (!('recipe' in data.data)) return;
 
-  state.recipe = createRecipeObject(data.data.recipe)
-  addBookmark(state.recipe)
+  state.recipe = createRecipeObject(data.data.recipe);
+  addBookmark(state.recipe);
+};
 
-}
+export const sortRecipeResults = (
+  sortBy: types.SortTypes = types.SortTypes.default
+) => {
+  console.log(state.search.results);
+};
 
-export const sortRecipeResults = (sortBy: types.SortTypes = types.SortTypes.default) => {
-  console.log(state.search.results)
-} 
+export const addIngredients = (newIngredient: types.IngredientInput) => {
+  state.form.ingredientInputs.push(newIngredient);
+};
 
-// Checking cache 
+// Checking cache
 const init = () => {
-  const storage = localStorage.getItem('bookmarks')
-  if(storage) state.bookmarks = JSON.parse(storage)
+  const storage = localStorage.getItem('bookmarks');
+  if (storage) state.bookmarks = JSON.parse(storage);
 };
 init();

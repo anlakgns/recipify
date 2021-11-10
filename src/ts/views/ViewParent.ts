@@ -2,7 +2,7 @@ import * as types from '../types';
 
 export default abstract class View<
   T extends HTMLElement,
-  U extends types.RenderInputDataTypes
+  U extends types.ViewInputs
 > {
   protected abstract parentEl: T;
   protected abstract generateMarkup(data: U | null): string;
@@ -73,13 +73,14 @@ export default abstract class View<
   public update(data: U | null) {
     // data guard
     if (!data) return;
-
     this.data = data;
     const newMarkup = this.generateMarkup(data);
 
     // kind of virtual dom
-    const newRange = document.createRange();
-    const newDOM = newRange.createContextualFragment(newMarkup);
+    const newRange = document.createRange(); // returns Range object that is a kind of fragment of document
+    const newDOM = newRange.createContextualFragment(newMarkup); // returns a DocumentFragment by invoking the HTML fragment parsing algorithm.
+
+    // It is used as a lightweight version of Document that stores a segment of a document structure comprised of nodes just like a standard document. The key difference is due to the fact that the document fragment isn't part of the active document tree structure. Changes made to the fragment don't affect the document (even on reflow) or incur any performance impact when changes are made.
 
     const newElements = Array.from(newDOM.querySelectorAll('*'));
     const curElements = Array.from(this.parentEl.querySelectorAll('*'));

@@ -28,7 +28,6 @@ class SortView extends View<HTMLDivElement, types.SortTypes> {
       const target: HTMLElement = e.target! as HTMLElement
       const btn: HTMLButtonElement = target.closest(".btn--sort")! as HTMLButtonElement
       const type = btn?.id == "ingredient" ? types.SortTypes.ingredient : types.SortTypes.duration
-      console.log(btn.id)
       handler(type)
     })
   }

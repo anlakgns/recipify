@@ -1,14 +1,14 @@
 import * as types from '../types';
 import View from './ViewParent';
 
-class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
-  protected data: types.RecipeInput | null = null;
+class RecipeView extends View<HTMLDivElement, types.RenderRecipe> {
+  protected data: types.RenderRecipe | null = null;
   protected parentEl = document.querySelector('.recipe')! as HTMLDivElement;
   protected errorMessage =
     'We could not find that recipe. Please try another one!';
   protected message = '';
 
-  protected generateMarkup(data: types.RecipeInput): string {
+  protected generateMarkup(data: types.RenderRecipe): string {
     return `
       <figure class="recipe__fig">
         <img src="${data.image}" alt="${data.title}" class="recipe__img" />
@@ -135,7 +135,7 @@ class RecipeView extends View<HTMLDivElement, types.RecipeInput> {
     });
   }
 
-  addBookmarkHandler(handler: (recipe: types.RecipeInput) => void) {
+  addBookmarkHandler(handler: (recipe: types.RenderRecipe) => void) {
     if (this.data?.bookmarked === true) return;
     this.parentEl.addEventListener('click', (e) => {
       const target: HTMLElement = e.target! as HTMLElement;

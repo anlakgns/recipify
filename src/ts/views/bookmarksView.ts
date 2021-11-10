@@ -1,16 +1,16 @@
 import * as types from '../types';
 import View from './ViewParent';
 
-class BookmarksView extends View<HTMLDivElement, types.RecipeInput[]> {
+class BookmarksView extends View<HTMLDivElement, types.RenderRecipe[]> {
   protected parentEl = document.querySelector(
     '.bookmarks__list'
   )! as HTMLDivElement;
-  protected data: types.RecipeInput[] | null = null;
+  protected data: types.RenderRecipe[] | null = null;
   protected errorMessage =
     'No bookmarks yet. Find a nice recipe and bookmark it.';
   protected message = '';
 
-  protected generateMarkup(data: types.RecipeInput[]): string {
+  protected generateMarkup(data: types.RenderRecipe[]): string {
     const id = window.location.hash.slice(1);
 
     const markup: string[] = data.map((recipe) => {
