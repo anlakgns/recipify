@@ -168,6 +168,12 @@ export const addIngredients = (newIngredient: types.IngredientInput) => {
   state.form.ingredientInputs.push(newIngredient);
 };
 
+export const deleteIngredients = (chipId: string) => {
+  state.form.ingredientInputs = state.form.ingredientInputs.filter(
+    (ing) => ing.id !== chipId
+  );
+};
+
 // Checking cache
 const init = () => {
   const storage = localStorage.getItem('bookmarks');

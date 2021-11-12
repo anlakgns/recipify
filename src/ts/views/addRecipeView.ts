@@ -35,6 +35,14 @@ class AddRecipeView extends View<HTMLFormElement, types.IngredientInput[]> {
     '.upload__ingredient__form__button'
   ) as HTMLButtonElement;
 
+  protected chipsParent: HTMLDivElement = document.querySelector(
+    '.upload__ingredient__chips'
+  ) as HTMLDivElement;
+
+  protected ingredientInputs: NodeList = document.querySelectorAll(
+    '.upload__ingredient__form__inputs--item'
+  );
+
   protected errorMessage = '';
   protected message = 'The recipe was successfully uploaded.';
   protected data: types.IngredientInput[] | null = null;
@@ -68,7 +76,7 @@ class AddRecipeView extends View<HTMLFormElement, types.IngredientInput[]> {
       >${ing.description} - ${ing.quantity}
       ${ing.unit}</span
     >
-    <button class="btn-ingredients">
+    <button class="btn-ingredients" data-id=${ing.id}>
       <svg>
         <use href="src/img/icons.svg#icon-exit"></use>
       </svg>
@@ -79,18 +87,20 @@ class AddRecipeView extends View<HTMLFormElement, types.IngredientInput[]> {
     return chipMarkups.join('');
   }
 
-  addUploadRecipeHandler(
+  addUploadRecipeHandlers(
     uploadHandler: (newRecipe: types.RecipeInput) => void,
-    ingredientHandler: (newIngredient: types.IngredientInput) => void
+    ingredientHandler: (newIngredient: types.IngredientInput) => void,
+    deleteIngredientChip: (chipId: string) => void
   ) {
     // setup listener for recipe
     this.addListenerUpload(uploadHandler);
 
     // setup listener for ingredient
     this.addListenerIngredient(ingredientHandler);
-  }
 
- 
+    // setup listener chips parents to delete chips with event delegation
+    this.addListenerChipDelete(deleteIngredientChip);
+  }
 
   protected addListenerUpload(handler: (newRecipe: types.RecipeInput) => void) {
     this.formRecipe.addEventListener('submit', (e) => {
@@ -142,15 +152,38 @@ class AddRecipeView extends View<HTMLFormElement, types.IngredientInput[]> {
       const data = [...new FormData(this.formIngredient)];
       const dataObj = Object.fromEntries(data);
       const formattedData: types.Ingredient = {
-        unit: parseFloat(dataObj.unit as string),
+        unit: dataObj.unit as string,
         quantity: parseFloat(dataObj.quantity as string),
         description: dataObj.description as string,
+        id: idMaker(),
       };
       handler(formattedData);
+
+      // clear inputs
+      const inputContainers = this.ingredientInputs;
+      for (let item of inputContainers) {
+        const itemTS = item as HTMLElement; // TS decleration
+        const itemInput = itemTS.querySelector('input')!;
+        itemInput.value = '';
+      }
     });
   }
 
+  protected addListenerChipDelete(handler: (chipId: string) => void) {
+    this.chipsParent.addEventListener('click', (e) => {
+      const targetEl: HTMLElement = e.target as HTMLElement;
+      const buttonEl: HTMLButtonElement = targetEl.closest(
+        '.btn-ingredients'
+      ) as HTMLButtonElement;
 
+      // guard clause
+      if (buttonEl === null) return;
+
+      const chipId = buttonEl.dataset.id!;
+      console.log(chipId);
+      handler(chipId);
+    });
+  }
   // validations
   protected checkInputs() {
     const title: HTMLInputElement = this.parentEl.getElementById(
@@ -208,7 +241,6 @@ class AddRecipeView extends View<HTMLFormElement, types.IngredientInput[]> {
       setSuccessFor(title, 'la');
     }
   }
-
 
   // Feedbacks
   protected clearCustom() {

@@ -35,14 +35,16 @@ export interface RenderRecipe {
 
 export type Ingredient = {
   quantity: number;
-  unit: number;
+  unit: string;
   description: string;
+  id: string;
 };
 
 export type IngredientInput = {
   quantity: number;
-  unit: number;
+  unit: string;
   description: string;
+  id: string;
 };
 
 export interface RecipeInput {

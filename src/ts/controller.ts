@@ -122,6 +122,11 @@ const controlUploadAddIngredient = (newIngredient: types.IngredientInput) => {
 
   addRecipeView.render(model.state.form.ingredientInputs);
 };
+const controlUploadDeleteIngredient = (chipId: string) => {
+  model.deleteIngredients(chipId);
+
+  addRecipeView.render(model.state.form.ingredientInputs);
+};
 
 const controlSort = (sortBy: types.SortTypes): void => {
   // update state
@@ -136,9 +141,10 @@ const init = () => {
   recipeView.addBookmarkHandler(controlBookmarks);
   searchView.addSearchHandler(controlSearchResults);
   paginationView.addPaginationHandler(controlPagination);
-  addRecipeView.addUploadRecipeHandler(
+  addRecipeView.addUploadRecipeHandlers(
     controlUploadAddRecipe,
-    controlUploadAddIngredient
+    controlUploadAddIngredient,
+    controlUploadDeleteIngredient
   );
   sortView.addHandlerSort(controlSort);
   bookmarksView.render(model.state.bookmarks);
